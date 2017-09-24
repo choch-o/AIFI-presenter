@@ -7,8 +7,8 @@ import { createMockTask } from 'redux-saga/lib/utils';
 
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import { LOAD_REPOS } from 'containers/App/constants';
-import { reposLoaded, repoLoadingError } from 'containers/App/actions';
+import { LOAD_VIDEOS } from 'containers/App/constants';
+import { videosLoaded, videoLoadingError } from 'containers/App/actions';
 
 import { getRepos, githubData } from '../sagas';
 
@@ -37,13 +37,13 @@ describe('getRepos Saga', () => {
       name: 'Second repo',
     }];
     const putDescriptor = getReposGenerator.next(response).value;
-    expect(putDescriptor).toEqual(put(reposLoaded(response, username)));
+    expect(putDescriptor).toEqual(put(videosLoaded(response, username)));
   });
 
   it('should call the repoLoadingError action if the response errors', () => {
     const response = new Error('Some error');
     const putDescriptor = getReposGenerator.throw(response).value;
-    expect(putDescriptor).toEqual(put(repoLoadingError(response)));
+    expect(putDescriptor).toEqual(put(videoLoadingError(response)));
   });
 });
 
@@ -53,7 +53,7 @@ describe('githubDataSaga Saga', () => {
 
   it('should start task to watch for LOAD_REPOS action', () => {
     const takeLatestDescriptor = githubDataSaga.next().value;
-    expect(takeLatestDescriptor).toEqual(takeLatest(LOAD_REPOS, getRepos));
+    expect(takeLatestDescriptor).toEqual(takeLatest(LOAD_VIDEOS, getRepos));
   });
 
   it('should yield until LOCATION_CHANGE action', () => {

@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import styled from 'styled-components';
 
+// language=SCSS prefix=dummy{ suffix=}
 export default styled(Link)`
   display: inline-flex;
   padding: 0.25em 2em;

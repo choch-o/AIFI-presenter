@@ -13,9 +13,10 @@
 import { fromJS } from 'immutable';
 
 import {
-  LOAD_REPOS_SUCCESS,
-  LOAD_REPOS,
-  LOAD_REPOS_ERROR,
+  LOAD_VIDEOS_SUCCESS,
+  LOAD_VIDEOS,
+  LOAD_VIDEOS_ERROR,
+  SELECT_VIDEO,
 } from './constants';
 
 // The initial state of the App
@@ -24,26 +25,30 @@ const initialState = fromJS({
   error: false,
   currentUser: false,
   userData: {
-    repositories: false,
+    videos: false,
   },
+  currentVideo: {},
 });
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
-    case LOAD_REPOS:
+    case LOAD_VIDEOS:
       return state
         .set('loading', true)
         .set('error', false)
-        .setIn(['userData', 'repositories'], false);
-    case LOAD_REPOS_SUCCESS:
+        .setIn(['userData', 'videos'], false);
+    case LOAD_VIDEOS_SUCCESS:
       return state
-        .setIn(['userData', 'repositories'], action.repos)
+        .setIn(['userData', 'videos'], action.videos)
         .set('loading', false)
         .set('currentUser', action.username);
-    case LOAD_REPOS_ERROR:
+    case LOAD_VIDEOS_ERROR:
       return state
         .set('error', action.error)
         .set('loading', false);
+    case 'SELECT_VIDEO':
+      return state
+        .set('currentVideo', action.currentVideo);
     default:
       return state;
   }

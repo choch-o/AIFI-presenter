@@ -11,22 +11,19 @@
  */
 import { fromJS } from 'immutable';
 
-import {
-  UPLOAD_VIDEO,
-} from './constants';
-
 // The initial state of the App
 const initialState = fromJS({
-  videos: [],
+  feedbackList: [],
 });
 
-function homeReducer(state = initialState, action) {
+function presentationReducer(state = initialState, action) {
   switch (action.type) {
-    case UPLOAD_VIDEO:
-      return { ...state, selectedVideo: action.video};
+    case 'SELECT_FEEDBACK':
+      return state
+        .set('selectedFeedback', action.feedback);
     default:
       return state;
   }
 }
 
-export default homeReducer;
+export default presentationReducer;

@@ -15,10 +15,6 @@
  *    }
  */
 
-import {
-  UPLOAD_VIDEO,
-} from './constants';
-
 /**
  * Changes the input field of the form
  *
@@ -26,9 +22,9 @@ import {
  *
  * @return {object}    An action object with a type of CHANGE_USERNAME
  */
-export function uploadVideo(video) {
+export function selectFeedback(feedback) {
   return {
-    type: UPLOAD_VIDEO,
-    video,
+    type: 'SELECT_FEEDBACK',
+    feedback,
   };
 }

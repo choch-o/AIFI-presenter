@@ -9,38 +9,83 @@ import Helmet from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import firebase from 'firebase';
+import { Link } from 'react-router';
 
-import { makeSelectRepos, makeSelectLoading, makeSelectError } from 'containers/App/selectors';
+
 import H2 from 'components/H2';
-import ReposList from 'components/ReposList';
-import AtPrefix from './AtPrefix';
+import FileInput from 'components/FileInput';
+import { selectVideo, uploadVideo } from 'containers/App/actions';
+import { makeSelectCurrentVideo } from 'containers/App/selectors';
 import CenteredSection from './CenteredSection';
-import Form from './Form';
-import Input from './Input';
 import Section from './Section';
 import messages from './messages';
-import { loadRepos } from '../App/actions';
-import { changeUsername } from './actions';
-import { makeSelectUsername } from './selectors';
+
+
+var storageRef = firebase.storage().ref();
+var database = firebase.database();
 
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  constructor(props) {
+    super(props);
+    this.state = {
+      videos: [],
+    };
+    this.loadVideos = this.loadVideos.bind(this);
+    this.onVideoUpload = this.onVideoUpload.bind(this);
+    this.onVideoClick = this.onVideoClick.bind(this);
+  }
   /**
-   * when initial state username is not null, submit the form to load repos
+   * when initial state username is not null, submit the form to load videos
    */
   componentDidMount() {
-    if (this.props.username && this.props.username.trim().length > 0) {
-      this.props.onSubmitForm();
-    }
+    this.loadVideos();
+  }
+
+  onVideoUpload(e) {
+    const video = e.target.files[0];
+    const videoName = video.name.split('\\').pop();
+    var videoStorageRef = storageRef.child('videos/' + videoName);
+    videoStorageRef.put(video).then((snapshot, err) => {
+      if (err) console.error(err);
+      database.ref('videos/').push({
+        name: videoName,
+        storage_url: snapshot.downloadURL,
+      });
+    });
+  }
+
+  onVideoClick(video) {
+    this.props.onVideoSelect(video);
+  }
+  loadVideos() {
+    const context = this;
+    database.ref('videos').on('value', (snapshot) => {
+      const newVideos = [];
+      snapshot.forEach((childSnapshot) => {
+        const video = childSnapshot.val();
+        video.key = childSnapshot.key;
+        newVideos.push(video);
+      });
+      context.setState({
+        videos: newVideos,
+      });
+    });
   }
 
   render() {
-    const { loading, error, repos } = this.props;
-    const reposListProps = {
-      loading,
-      error,
-      repos,
-    };
-
+    const videoItems = this.state.videos.map((video) => {
+      return (
+        <div
+          key={video.key}
+          onClick={() => this.onVideoClick(video)}
+        >
+          <Link
+            to="/presentation"
+          >{video.name}</Link>
+        </div>
+      );
+    });
     return (
       <article>
         <Helmet
@@ -52,32 +97,20 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
         <div>
           <CenteredSection>
             <H2>
-              <FormattedMessage {...messages.startProjectHeader} />
+              <FormattedMessage {...messages.projectIntroHeader} />
             </H2>
             <p>
-              <FormattedMessage {...messages.startProjectMessage} />
+              <FormattedMessage {...messages.projectIntroMessage} />
             </p>
           </CenteredSection>
           <Section>
             <H2>
-              <FormattedMessage {...messages.trymeHeader} />
+              <FormattedMessage {...messages.presentationListHeader} />
             </H2>
-            <Form onSubmit={this.props.onSubmitForm}>
-              <label htmlFor="username">
-                <FormattedMessage {...messages.trymeMessage} />
-                <AtPrefix>
-                  <FormattedMessage {...messages.trymeAtPrefix} />
-                </AtPrefix>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="mxstbr"
-                  value={this.props.username}
-                  onChange={this.props.onChangeUsername}
-                />
-              </label>
-            </Form>
-            <ReposList {...reposListProps} />
+            <FileInput onChange={this.onVideoUpload}>
+              <FormattedMessage {...messages.presentationAddMessage} />
+            </FileInput>
+            <div>{videoItems}</div>
           </Section>
         </div>
       </article>
@@ -91,30 +124,23 @@ HomePage.propTypes = {
     React.PropTypes.object,
     React.PropTypes.bool,
   ]),
-  repos: React.PropTypes.oneOfType([
+  videos: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.bool,
   ]),
-  onSubmitForm: React.PropTypes.func,
   username: React.PropTypes.string,
-  onChangeUsername: React.PropTypes.func,
+  currentVideo: React.PropTypes.object,
+  onVideoSelect: React.PropTypes.func,
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onChangeUsername: (evt) => dispatch(changeUsername(evt.target.value)),
-    onSubmitForm: (evt) => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadRepos());
-    },
+    onVideoSelect: (video) => dispatch(selectVideo(video)),
   };
 }
 
 const mapStateToProps = createStructuredSelector({
-  repos: makeSelectRepos(),
-  username: makeSelectUsername(),
-  loading: makeSelectLoading(),
-  error: makeSelectError(),
+  currentVideo: makeSelectCurrentVideo(),
 });
 
 // Wrap the component to inject dispatch and state into it

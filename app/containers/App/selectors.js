@@ -21,9 +21,9 @@ const makeSelectError = () => createSelector(
   (globalState) => globalState.get('error')
 );
 
-const makeSelectRepos = () => createSelector(
+const makeSelectVideos = () => createSelector(
   selectGlobal,
-  (globalState) => globalState.getIn(['userData', 'repositories'])
+  (globalState) => globalState.getIn(['userData', 'videos'])
 );
 
 const makeSelectLocationState = () => {
@@ -42,11 +42,17 @@ const makeSelectLocationState = () => {
   };
 };
 
+const makeSelectCurrentVideo = () => createSelector(
+  selectGlobal,
+  (globalState) => globalState.get('currentVideo')
+);
+
 export {
   selectGlobal,
   makeSelectCurrentUser,
   makeSelectLoading,
   makeSelectError,
-  makeSelectRepos,
+  makeSelectVideos,
   makeSelectLocationState,
+  makeSelectCurrentVideo
 };

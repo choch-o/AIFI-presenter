@@ -9,4 +9,5 @@
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
 
-export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
+export const UPLOAD_VIDEO = 'aifi/Home/UPLOAD_VIDEO';
+export const GET_VIDEOS = 'aifi/Home/GET_VIDEOS';

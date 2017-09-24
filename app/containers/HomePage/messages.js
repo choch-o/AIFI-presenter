@@ -6,24 +6,28 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  startProjectHeader: {
-    id: 'boilerplate.containers.HomePage.start_project.header',
-    defaultMessage: 'Start your next react project in seconds',
+  projectIntroHeader: {
+    id: 'aifi.containers.HomePage.project_intro.header',
+    defaultMessage: 'AIFI: Asynchronous Interactive Feedback Interface',
   },
-  startProjectMessage: {
-    id: 'boilerplate.containers.HomePage.start_project.message',
-    defaultMessage: 'A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices',
+  projectIntroMessage: {
+    id: 'aifi.containers.HomePage.project_intro.message',
+    defaultMessage: 'Upload your presentation rehearsal video & collect feedback from peer interactively!',
   },
-  trymeHeader: {
-    id: 'boilerplate.containers.HomePage.tryme.header',
-    defaultMessage: 'Try me!',
+  presentationListHeader: {
+    id: 'aifi.containers.HomePage.presentation_list.header',
+    defaultMessage: 'Presentation List',
   },
   trymeMessage: {
-    id: 'boilerplate.containers.HomePage.tryme.message',
+    id: 'aifi.containers.HomePage.tryme.message',
     defaultMessage: 'Show Github repositories by',
   },
   trymeAtPrefix: {
-    id: 'boilerplate.containers.HomePage.tryme.atPrefix',
+    id: 'aifi.containers.HomePage.tryme.atPrefix',
     defaultMessage: '@',
+  },
+  presentationAddMessage: {
+    id: 'aifi.containers.HomePage.presentation_add.message',
+    defaultMessage: 'Add a Presentation Video',
   },
 });

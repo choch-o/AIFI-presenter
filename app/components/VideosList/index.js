@@ -1,11 +1,14 @@
+/**
+ * Created by chocho on 9/15/17.
+ */
 import React, { PropTypes } from 'react';
 
 import List from 'components/List';
 import ListItem from 'components/ListItem';
 import LoadingIndicator from 'components/LoadingIndicator';
-import RepoListItem from 'containers/RepoListItem';
+import VideoListItem from 'containers/VideoListItem';
 
-function ReposList({ loading, error, repos }) {
+function VideosList({ loading, error, videos }) {
   if (loading) {
     return <List component={LoadingIndicator} />;
   }
@@ -17,17 +20,17 @@ function ReposList({ loading, error, repos }) {
     return <List component={ErrorComponent} />;
   }
 
-  if (repos !== false) {
-    return <List items={repos} component={RepoListItem} />;
+  if (videos !== false) {
+    return <List items={videos} component={VideoListItem} />;
   }
 
   return null;
 }
 
-ReposList.propTypes = {
+VideosList.propTypes = {
   loading: PropTypes.bool,
   error: PropTypes.any,
-  repos: PropTypes.any,
+  videos: PropTypes.any,
 };
 
-export default ReposList;
+export default VideosList;

@@ -39,12 +39,19 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/features',
-      name: 'features',
+      path: '/presentation',
+      name: 'presentation',
       getComponent(nextState, cb) {
-        import('containers/FeaturePage')
-          .then(loadModule(cb))
-          .catch(errorLoading);
+        const importModules = Promise.all([
+          import('containers/PresentationPage/reducer'),
+          import('containers/PresentationPage'),
+        ]);
+        const renderRoute = loadModule(cb);
+        importModules.then(([reducer, component]) => {
+          injectReducer('presentation', reducer.default);
+          renderRoute(component);
+        });
+        importModules.catch(errorLoading);
       },
     }, {
       path: '*',
